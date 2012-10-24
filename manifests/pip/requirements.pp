@@ -2,7 +2,9 @@
 # Pip tries to upgrade packages when the requirements file changes.
 define python::pip::requirements($venv, $owner=undef, $group=undef) {
   $requirements = $name
-  $checksum = "$venv/requirements.checksum"
+  # We could have multiple requirements, so save each as a separate checksum
+  $reqcode = sha1($requirements)
+  $checksum = "$venv/requirements_$reqcode.checksum"
 
   Exec {
     user => $owner,
