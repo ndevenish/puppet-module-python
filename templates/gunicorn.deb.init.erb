@@ -18,8 +18,14 @@ WORKERS=<%= workers %>
 TIMEOUT=<%= timeout_seconds %>
 MODULE=<%= django ? django_settings : wsgi_module %>
 
+<% if configfile %>
 DAEMON_OPTS="-b $SOCKET -p $PIDFILE --log-file $LOGFILE \
---workers $WORKERS -t $TIMEOUT --daemon --name $NAME $MODULE"
+--workers $WORKERS -t $TIMEOUT --daemon --name $NAME \
+--config=<%= configfile %> $MODULE"
+<% else %>
+DAEMON_OPTS="-b $SOCKET -p $PIDFILE --log-file $LOGFILE \
+ --workers $WORKERS -t $TIMEOUT --daemon --name $NAME $MODULE"
+<% end %>
 
 test -x $DAEMON || exit 0
 
